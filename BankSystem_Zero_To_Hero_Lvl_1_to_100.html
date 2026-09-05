@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankSystem: From Level 1 to 100 (Zero to Senior .NET Architect)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --bg-body: #06090f;
+            --bg-sidebar: #0a0e17;
+            --bg-card: rgba(16, 22, 36, 0.85);
+            --bg-card-hover: rgba(22, 30, 48, 0.95);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(99, 102, 241, 0.35);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            --lvl-novice: #38bdf8;
+            --lvl-apprentice: #34d399;
+            --lvl-journeyman: #fbbf24;
+            --lvl-senior: #f43f5e;
+            --lvl-architect: #a855f7;
+
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-glow: rgba(99, 102, 241, 0.28);
+            --secondary: #06b6d4;
+            --accent-emerald: #10b981;
+            --code-bg: #07090e;
+            --code-border: #161c2b;
+            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        aside.sidebar {
+            width: 350px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0; bottom: 0; left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%);
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            color: #c084fc;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-container {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--lvl-novice) 0%, var(--lvl-apprentice) 30%, var(--lvl-journeyman) 60%, var(--lvl-senior) 80%, var(--lvl-architect) 100%);
+        }
+
+        .sidebar-menu {
+            padding: 16px 14px 40px;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-lvl-category {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 10px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.84rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .nav-link i {
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        /* Main Content Container */
+        main.content {
+            margin-left: 350px;
+            flex: 1;
+            padding: 40px 50px 100px;
+            max-width: 1420px;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(6, 182, 212, 0.12) 50%, rgba(168, 85, 247, 0.08) 100%);
+            border: 1px solid var(--border-highlight);
+            border-radius: 24px;
+            padding: 48px;
+            position: relative;
+            margin-bottom: 50px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 55%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.12rem;
+            color: var(--text-muted);
+            max-width: 880px;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        /* Tier Banner */
+        .tier-banner {
+            border-radius: 16px;
+            padding: 24px 30px;
+            margin-bottom: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-novice { background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0.03) 100%); border: 1px solid rgba(56, 189, 248, 0.3); }
+        .tier-apprentice { background: linear-gradient(90deg, rgba(52, 211, 153, 0.15) 0%, rgba(52, 211, 153, 0.03) 100%); border: 1px solid rgba(52, 211, 153, 0.3); }
+        .tier-journeyman { background: linear-gradient(90deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 191, 36, 0.03) 100%); border: 1px solid rgba(251, 191, 36, 0.3); }
+        .tier-senior { background: linear-gradient(90deg, rgba(244, 63, 94, 0.15) 0%, rgba(244, 63, 94, 0.03) 100%); border: 1px solid rgba(244, 63, 94, 0.3); }
+        .tier-architect { background: linear-gradient(90deg, rgba(168, 85, 247, 0.18) 0%, rgba(168, 85, 247, 0.03) 100%); border: 1px solid rgba(168, 85, 247, 0.35); }
+
+        .tier-title-group h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tier-subtitle {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .tier-badge {
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* Glass Panel */
+        .glass-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            transition: border-color 0.2s;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--border-highlight);
+        }
+
+        .panel-heading {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        /* Analogy Card */
+        .analogy-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .analogy-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--primary-light);
+            flex-shrink: 0;
+        }
+
+        .analogy-text h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .analogy-text p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .analogy-match {
+            margin-top: 8px;
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--secondary);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 0.76rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        /* Code Blocks */
+        .code-container {
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .code-header {
+            background: #0f1422;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--code-border);
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--secondary);
+        }
+
+        pre.code-body {
+            padding: 18px;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.65;
+            color: #e2e8f0;
+        }
+
+        .c-kw { color: #f43f5e; font-weight: 600; }
+        .c-tp { color: #38bdf8; }
+        .c-str { color: #a3e635; }
+        .c-cmt { color: #64748b; font-style: italic; }
+        .c-fn { color: #fbbf24; }
+        .c-num { color: #c084fc; }
+
+        /* Interactive Widgets */
+        .widget-box {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border: 1px solid var(--border-highlight);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-light);
+        }
+
+        .calc-result-box {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .calc-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-emerald);
+            font-family: var(--font-mono);
+        }
+
+        /* Compare Grid (Novice vs Senior) */
+        .compare-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .compare-side {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .compare-bad {
+            border-top: 3px solid var(--accent-rose);
+        }
+
+        .compare-good {
+            border-top: 3px solid var(--accent-emerald);
+        }
+
+        .compare-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .compare-bad .compare-title { color: var(--accent-rose); }
+        .compare-good .compare-title { color: var(--accent-emerald); }
+
+        /* Floating Back to top button */
+        .btn-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transition: transform 0.2s, opacity 0.2s;
+            opacity: 0.85;
+            z-index: 999;
+        }
+
+        .btn-top:hover { opacity: 1; transform: translateY(-3px); }
+
+        @media (max-width: 1024px) {
+            aside.sidebar { transform: translateX(-100%); }
+            main.content { margin-left: 0; padding: 20px; }
+            .grid-2, .compare-box { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebarNav">
+        <div class="sidebar-header">
+            <div class="brand-badge"><i class="bi bi-mortarboard-fill"></i> Zero to Hero Curriculum</div>
+            <div class="sidebar-title"><i class="bi bi-bank text-primary"></i> BankSystem Mastery</div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Learning Progression</span>
+                <span>Lvl 1 &rarr; 100</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-lvl-category" style="color: var(--lvl-novice);">
+                <span>LEVEL 1–20: THE BASICS</span>
+                <span class="badge-pill" style="color: var(--lvl-novice);">Novice</span>
+            </li>
+            <li><a href="#lvl-1-analogy" class="nav-link"><i class="bi bi-building"></i> Lvl 1: The Physical Bank Analogy</a></li>
+            <li><a href="#lvl-5-architecture" class="nav-link"><i class="bi bi-diagram-3"></i> Lvl 5: Web Software 101 &amp; HTTP</a></li>
+            <li><a href="#lvl-10-mvc" class="nav-link"><i class="bi bi-layers"></i> Lvl 10: Model-View-Controller</a></li>
+            <li><a href="#lvl-15-csharp" class="nav-link"><i class="bi bi-code-slash"></i> Lvl 15: C# Classes, Objects &amp; Methods</a></li>
+
+            <li class="menu-lvl-category" style="color: var(--lvl-apprentice);">
+                <span>LEVEL 21–40: CLIENT &amp; CONTROLLERS</span>
+                <span class="badge-pill" style="color: var(--lvl-apprentice);">Apprentice</span>
+            </li>
+            <li><a href="#lvl-25-routing" class="nav-link"><i class="bi bi-signpost-2"></i> Lvl 25: Program.cs &amp; Routing</a></li>
+            <li><a href="#lvl-30-viewmodels" class="nav-link"><i class="bi bi-shield-check"></i> Lvl 30: ViewModels &amp; Validation</a></li>
+            <li><a href="#lvl-35-razor" class="nav-link"><i class="bi bi-window-sidebar"></i> Lvl 35: Razor &amp; TagHelpers</a></li>
+
+            <li class="menu-lvl-category" style="color: var(--lvl-journeyman);">
+                <span>LEVEL 41–65: DATABASE &amp; LINQ</span>
+                <span class="badge-pill" style="color: var(--lvl-journeyman);">Journeyman</span>
+            </li>
+            <li><a href="#lvl-45-efcore" class="nav-link"><i class="bi bi-database"></i> Lvl 45: EF Core &amp; ApplicationDbContext</a></li>
+            <li><a href="#lvl-50-linq" class="nav-link"><i class="bi bi-funnel"></i> Lvl 50: LINQ Mastery (Deferred vs Executed)</a></li>
+            <li><a href="#lvl-55-eager" class="nav-link"><i class="bi bi-link-45deg"></i> Lvl 55: Eager Loading (.Include) &amp; N+1</a></li>
+            <li><a href="#lvl-60-precision" class="nav-link"><i class="bi bi-currency-dollar"></i> Lvl 60: Financial Decimal Precision</a></li>
+
+            <li class="menu-lvl-category" style="color: var(--lvl-senior);">
+                <span>LEVEL 66–85: BANKING MECHANICS</span>
+                <span class="badge-pill" style="color: var(--lvl-senior);">Senior</span>
+            </li>
+            <li><a href="#lvl-70-acid" class="nav-link"><i class="bi bi-arrow-left-right"></i> Lvl 70: ACID Database Transactions</a></li>
+            <li><a href="#lvl-75-math" class="nav-link"><i class="bi bi-calculator"></i> Lvl 75: EMI Amortization Math</a></li>
+            <li><a href="#lvl-80-di" class="nav-link"><i class="bi bi-boxes"></i> Lvl 80: DI Lifetimes (Scoped vs Singleton)</a></li>
+
+            <li class="menu-lvl-category" style="color: var(--lvl-architect);">
+                <span>LEVEL 86–100: ENTERPRISE ARCHITECT</span>
+                <span class="badge-pill" style="color: var(--lvl-architect);">Architect</span>
+            </li>
+            <li><a href="#lvl-90-concurrency" class="nav-link"><i class="bi bi-lightning-charge"></i> Lvl 90: Race Conditions &amp; Double Spending</a></li>
+            <li><a href="#lvl-95-postgres" class="nav-link"><i class="bi bi-database-up"></i> Lvl 95: Scaling SQLite to PostgreSQL</a></li>
+            <li><a href="#lvl-100-cloud" class="nav-link"><i class="bi bi-cloud-check"></i> Lvl 100: High-Scale Banking System</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>BankSystem: The Level 1 to 100 Mastery Guide</h1>
+            <p>
+                We start with the simplest real-world physical bank analogy that a 5-year-old can understand, and gradually take you step-by-step through C#, ASP.NET Core MVC, Entity Framework Core, LINQ, ACID banking transactions, and high-concurrency enterprise architecture.
+            </p>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- LEVEL 1–20: NOVICE TIER -->
+        <!-- ========================================================================= -->
+        <section id="lvl-1-analogy">
+            <div class="tier-banner tier-novice">
+                <div class="tier-title-group">
+                    <h2><i class="bi bi-stars text-info"></i> Level 1–20: The Physical Bank Analogy</h2>
+                    <div class="tier-subtitle">Understanding software by comparing it to a real-world bank you visit in person.</div>
+                </div>
+                <span class="tier-badge" style="background: rgba(56, 189, 248, 0.2); color: var(--lvl-novice);">Tier 1: Novice</span>
+            </div>
+
+            <div class="glass-panel">
+                <div class="panel-heading"><i class="bi bi-lightbulb-fill text-warning"></i> How Software Mirrors a Real Bank</div>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;">
+                    Imagine you want to transfer $100 to a friend in the real world. You don't walk into the bank vault and grab cash yourself—that would be chaotic and illegal! Here is how a real bank operates, and its exact 1:1 software counterpart in <strong>BankSystem.Web</strong>:
+                </p>
+
+                <div class="grid-2">
+                    <div class="analogy-card">
+                        <div class="analogy-icon"><i class="bi bi-person"></i></div>
+                        <div class="analogy-text">
+                            <h4>1. The Customer</h4>
+                            <p>You arrive at the bank and want to make a transfer, check your balance, or apply for a loan.</p>
+                            <span class="analogy-match">Software = The Web Browser (Chrome/Edge)</span>
+                        </div>
+                    </div>
+
+                    <div class="analogy-card">
+                        <div class="analogy-icon"><i class="bi bi-shield-lock"></i></div>
+                        <div class="analogy-text">
+                            <h4>2. The Security Guard at the Door</h4>
+                            <p>Checks your ID card. If you are not a verified bank customer, you are stopped at the door.</p>
+                            <span class="analogy-match">Software = [Authorize] Middleware &amp; Cookies</span>
+                        </div>
+                    </div>
+
+                    <div class="analogy-card">
+                        <div class="analogy-icon"><i class="bi bi-person-workspace"></i></div>
+                        <div class="analogy-text">
+                            <h4>3. The Bank Teller at the Counter</h4>
+                            <p>Greets you, hands you a transfer slip, verifies what you wrote on it, and talks to back-office workers.</p>
+                            <span class="analogy-match">Software = MVC Controller (TransactionController)</span>
+                        </div>
+                    </div>
+
+                    <div class="analogy-card">
+                        <div class="analogy-icon"><i class="bi bi-file-earmark-text"></i></div>
+                        <div class="analogy-text">
+                            <h4>4. The Paper Transfer Slip</h4>
+                            <p>A standardized form where you write: "From Account", "To Account", "Amount". Must be positive!</p>
+                            <span class="analogy-match">Software = ViewModel (TransferViewModel)</span>
+                        </div>
+                    </div>
+
+                    <div class="analogy-card">
+                        <div class="analogy-icon"><i class="bi bi-gear-wide-connected"></i></div>
+                        <div class="analogy-text">
+                            <h4>5. The Back-Office Vault Officer</h4>
+                            <p>Checks if you actually have enough money in your account, handles the math, and logs the change.</p>
+                            <span class="analogy-match">Software = Business Service (TransactionService)</span>
+                        </div>
+                    </div>
+
+                    <div class="analogy-card">
+                        <div class="analogy-icon"><i class="bi bi-safe2"></i></div>
+                        <div class="analogy-text">
+                            <h4>6. The Vault &amp; Official Ledger Book</h4>
+                            <p>The permanent, locked steel vault and master ledger where balances are stamped and recorded permanently.</p>
+                            <span class="analogy-match">Software = EF Core (ApplicationDbContext) &amp; SQLite</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 10: MVC -->
+            <div class="glass-panel" id="lvl-10-mvc">
+                <div class="panel-heading"><i class="bi bi-diagram-3-fill text-primary"></i> Level 10: The MVC (Model-View-Controller) Pattern</div>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 16px;">
+                    ASP.NET Core uses the <strong>MVC pattern</strong> to separate duties cleanly:
+                </p>
+
+                <div class="grid-3">
+                    <div class="glass-panel" style="border-top: 3px solid var(--lvl-novice);">
+                        <h4 style="color: var(--lvl-novice); margin-bottom: 8px;">M - Model</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">
+                            Represents the <strong>Data</strong>.<br>
+                            Examples in our code: <code>Account</code>, <code>Customer</code>, <code>Transaction</code>, <code>Loan</code>.
+                        </p>
+                    </div>
+                    <div class="glass-panel" style="border-top: 3px solid var(--lvl-apprentice);">
+                        <h4 style="color: var(--lvl-apprentice); margin-bottom: 8px;">V - View</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">
+                            The visual <strong>HTML Webpage</strong> that the user sees in their browser.<br>
+                            Examples: <code>Dashboard.cshtml</code>, <code>Transfer.cshtml</code>.
+                        </p>
+                    </div>
+                    <div class="glass-panel" style="border-top: 3px solid var(--lvl-journeyman);">
+                        <h4 style="color: var(--lvl-journeyman); margin-bottom: 8px;">C - Controller</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">
+                            The <strong>Brain / Traffic Cop</strong>.<br>
+                            Receives HTTP requests, calls services, and decides which View or Redirect to return.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- LEVEL 21–40: APPRENTICE TIER -->
+        <!-- ========================================================================= -->
+        <section id="lvl-25-routing">
+            <div class="tier-banner tier-apprentice">
+                <div class="tier-title-group">
+                    <h2><i class="bi bi-signpost-split text-success"></i> Level 21–40: Routing, ViewModels &amp; Razor</h2>
+                    <div class="tier-subtitle">How user requests travel from the browser into your C# controllers safely.</div>
+                </div>
+                <span class="tier-badge" style="background: rgba(52, 211, 153, 0.2); color: var(--lvl-apprentice);">Tier 2: Apprentice</span>
+            </div>
+
+            <!-- ViewModels -->
+            <div class="glass-panel" id="lvl-30-viewmodels">
+                <div class="panel-heading"><i class="bi bi-shield-check text-accent-emerald"></i> Level 30: Why ViewModels? (Over-Posting Attacks Explained)</div>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 14px;">
+                    Why don't we pass the database model <code>Account</code> directly into the transfer form?
+                </p>
+
+                <div class="compare-box">
+                    <div class="compare-side compare-bad">
+                        <div class="compare-title"><i class="bi bi-x-circle-fill"></i> Bad (Novice Mistake)</div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+                            Accepting <code>Account</code> directly in the controller action:
+                        </p>
+                        <div class="code-container">
+                            <pre class="code-body"><span class="c-kw">public</span> IActionResult <span class="c-fn">Update</span>(Account account)
+{
+    <span class="c-cmt">// DANGER: An attacker can send a POST request with</span>
+    <span class="c-cmt">// "Balance=99999999" and the framework binds it!</span>
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="compare-side compare-good">
+                        <div class="compare-title"><i class="bi bi-check-circle-fill"></i> Good (Senior BankSystem Pattern)</div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+                            Using a dedicated <code>TransferViewModel</code>:
+                        </p>
+                        <div class="code-container">
+                            <pre class="code-body"><span class="c-kw">public class</span> <span class="c-tp">TransferViewModel</span>
+{
+    [Required]
+    <span class="c-kw">public int</span> FromAccountId { <span class="c-kw">get</span>; <span class="c-kw">set</span>; }
+    
+    [Required]
+    [Range(<span class="c-num">0.01</span>, <span class="c-tp">double</span>.MaxValue)]
+    <span class="c-kw">public decimal</span> Amount { <span class="c-kw">get</span>; <span class="c-kw">set</span>; }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+                <p style="font-size: 0.88rem; color: var(--text-muted);">
+                    <strong>Protection:</strong> ViewModels act as a strict whitelist. The user can only submit what we explicitly define. <code>[Range(0.01, ...)]</code> ensures nobody can transfer negative money to steal from an account!
+                </p>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- LEVEL 41–65: JOURNEYMAN TIER -->
+        <!-- ========================================================================= -->
+        <section id="lvl-45-efcore">
+            <div class="tier-banner tier-journeyman">
+                <div class="tier-title-group">
+                    <h2><i class="bi bi-database text-warning"></i> Level 41–65: Database, EF Core &amp; LINQ Mastery</h2>
+                    <div class="tier-subtitle">Translating C# code into high-speed SQL statements automatically.</div>
+                </div>
+                <span class="tier-badge" style="background: rgba(251, 191, 36, 0.2); color: var(--lvl-journeyman);">Tier 3: Journeyman</span>
+            </div>
+
+            <!-- LINQ Deferred Execution -->
+            <div class="glass-panel" id="lvl-50-linq">
+                <div class="panel-heading"><i class="bi bi-funnel-fill text-secondary"></i> Level 50: Deferred vs Immediate Execution in LINQ</div>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 14px;">
+                    One of the biggest concepts in .NET is that LINQ queries are <strong>lazy (deferred)</strong>:
+                </p>
+
+                <div class="code-container">
+                    <div class="code-header"><span>ReportController.cs - LINQ Query</span></div>
+                    <pre class="code-body"><span class="c-cmt">// STEP 1: Builds the SQL query in memory (NO DATABASE HIT YET!)</span>
+<span class="c-kw">var</span> query = _context.Transactions
+    .Where(t =&gt; t.AccountId == accountId &amp;&amp; t.Amount &gt; <span class="c-num">100</span>)
+    .OrderByDescending(t =&gt; t.TransactionDate);
+
+<span class="c-cmt">// STEP 2: The moment ToListAsync() is called, SQL is sent to SQLite!</span>
+<span class="c-kw">var</span> results = <span class="c-kw">await</span> query.ToListAsync();</pre>
+                </div>
+                <p style="font-size: 0.88rem; color: var(--text-muted);">
+                    <strong>Why this is awesome:</strong> You can chain 10 different filters (<code>.Where()</code>, <code>.Take(5)</code>, <code>.OrderBy()</code>) without running multiple queries. EF Core merges all of them into a single, highly optimized SQL query!
+                </p>
+            </div>
+
+            <!-- Eager Loading -->
+            <div class="glass-panel" id="lvl-55-eager">
+                <div class="panel-heading"><i class="bi bi-link-45deg text-accent-emerald"></i> Level 55: The N+1 Query Bug &amp; Eager Loading (.Include)</div>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 12px;">
+                    Suppose you have 100 customers and each customer has accounts.
+                </p>
+                <div class="compare-box">
+                    <div class="compare-side compare-bad">
+                        <div class="compare-title"><i class="bi bi-bug-fill"></i> Without .Include (N+1 Query Bug)</div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">
+                            Loads 1 query for customers, then fires <strong>100 separate queries</strong> to fetch accounts for each customer: <strong>101 database queries total!</strong> Server slows to a crawl.
+                        </p>
+                    </div>
+                    <div class="compare-side compare-good">
+                        <div class="compare-title"><i class="bi bi-lightning-charge-fill"></i> With .Include (BankSystem Way)</div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">
+                            <code>_context.Customers.Include(c =&gt; c.Accounts)</code> fires <strong>EXACTLY 1 QUERY</strong> using a SQL <code>LEFT JOIN</code>. 100x faster!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- LEVEL 66–85: SENIOR TIER -->
+        <!-- ========================================================================= -->
+        <section id="lvl-70-acid">
+            <div class="tier-banner tier-senior">
+                <div class="tier-title-group">
+                    <h2><i class="bi bi-shield-shaded text-danger"></i> Level 66–85: Banking Logic, Math &amp; Transactions</h2>
+                    <div class="tier-subtitle">ACID transactions, financial formulas, and dependency injection lifetimes.</div>
+                </div>
+                <span class="tier-badge" style="background: rgba(244, 63, 94, 0.2); color: var(--lvl-senior);">Tier 4: Senior</span>
+            </div>
+
+            <!-- ACID -->
+            <div class="glass-panel">
+                <div class="panel-heading"><i class="bi bi-arrow-left-right text-primary"></i> Level 70: ACID Database Transactions</div>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 14px;">
+                    What happens if John transfers $500 to Mary, John's account is deducted $500, and right at that microsecond the server crashes before Mary is credited?
+                </p>
+                <div style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                    <strong style="color: #f43f5e;"><i class="bi bi-exclamation-octagon-fill"></i> The Nightmare Scenario:</strong> $500 vanished into thin air! John lost it, but Mary never received it!
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">
+                    In [TransactionService.cs](file:///c:/Users/mahmoud%20hazem/Desktop/BankSystem/BankSystem.Web/Services/TransactionService.cs#L31), we enforce <strong>ACID Atomicity</strong>:
+                </p>
+                <div class="code-container">
+                    <pre class="code-body"><span class="c-kw">using var</span> transaction = <span class="c-kw">await</span> _context.Database.BeginTransactionAsync();
+<span class="c-kw">try</span> {
+    fromAccount.Balance -= model.Amount; <span class="c-cmt">// Step 1</span>
+    toAccount.Balance += model.Amount;   <span class="c-cmt">// Step 2</span>
+    <span class="c-kw">await</span> _context.SaveChangesAsync();
+    <span class="c-kw">await</span> transaction.CommitAsync();     <span class="c-cmt">// Both commit together</span>
+}
+<span class="c-kw">catch</span> {
+    <span class="c-kw">await</span> transaction.RollbackAsync();   <span class="c-cmt">// If anything fails, revert completely!</span>
+}</pre>
+                </div>
+            </div>
+
+            <!-- Interactive EMI Calculator Widget -->
+            <div class="glass-panel" id="lvl-75-math">
+                <div class="panel-heading"><i class="bi bi-calculator text-accent-amber"></i> Level 75: Interactive Loan EMI Calculator (Live Formula)</div>
+                <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 16px;">
+                    Try the interactive calculator below. It uses the exact mathematical formula implemented in [LoanService.cs](file:///c:/Users/mahmoud%20hazem/Desktop/BankSystem/BankSystem.Web/Services/LoanService.cs#L29):
+                </p>
+
+                <div class="widget-box">
+                    <div class="grid-3">
+                        <div class="input-group">
+                            <label>Principal Amount ($)</label>
+                            <input type="number" id="calcPrincipal" value="10000" oninput="calculateEMI()">
+                        </div>
+                        <div class="input-group">
+                            <label>Annual Interest Rate (%)</label>
+                            <input type="number" id="calcRate" value="10.5" step="0.1" oninput="calculateEMI()">
+                        </div>
+                        <div class="input-group">
+                            <label>Duration (Months)</label>
+                            <input type="number" id="calcMonths" value="24" oninput="calculateEMI()">
+                        </div>
+                    </div>
+
+                    <div class="calc-result-box">
+                        <div style="font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Calculated Monthly Payment (EMI)</div>
+                        <div class="calc-amount" id="emiDisplay">$463.76 / mo</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- LEVEL 86–100: ARCHITECT TIER -->
+        <!-- ========================================================================= -->
+        <section id="lvl-90-concurrency">
+            <div class="tier-banner tier-architect">
+                <div class="tier-title-group">
+                    <h2><i class="bi bi-trophy text-purple"></i> Level 86–100: Principal Enterprise Architect</h2>
+                    <div class="tier-subtitle">Scaling to millions of users, preventing race conditions, and cloud architecture.</div>
+                </div>
+                <span class="tier-badge" style="background: rgba(168, 85, 247, 0.2); color: var(--lvl-architect);">Tier 5: Architect</span>
+            </div>
+
+            <!-- Race Conditions -->
+            <div class="glass-panel">
+                <div class="panel-heading"><i class="bi bi-lightning-charge-fill text-warning"></i> Level 90: The Double-Spending Race Condition Attack</div>
+                <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 14px;">
+                    Suppose a user has $100 in their checking account. They open two browser tabs at the same time and hit "Transfer $100" simultaneously in both tabs at the exact same millisecond:
+                </p>
+
+                <div style="background: rgba(0,0,0,0.4); padding: 18px; border-radius: 12px; font-family: var(--font-mono); font-size: 0.84rem; color: #cbd5e1; margin-bottom: 16px;">
+                    Thread 1: Reads Balance ($100). Checks if ($100 &gt;= $100) &rarr; YES!<br>
+                    Thread 2: Reads Balance ($100). Checks if ($100 &gt;= $100) &rarr; YES!<br>
+                    Thread 1: Deducts $100 &rarr; Balance becomes $0.<br>
+                    Thread 2: Deducts $100 &rarr; Balance becomes -$100 (or overwrites with $0)!<br>
+                    <span style="color: #f43f5e; font-weight: bold;">Result: $200 was transferred out of an account that only had $100!</span>
+                </div>
+
+                <h5 style="color: #fff; margin-bottom: 8px;">The Enterprise Fix: Optimistic Concurrency Token</h5>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Add a concurrency token to the <code>Account</code> model:
+                </p>
+                <div class="code-container">
+                    <pre class="code-body">[Timestamp]
+<span class="c-kw">public byte</span>[] RowVersion { <span class="c-kw">get</span>; <span class="c-kw">set</span>; }</pre>
+                </div>
+                <p style="font-size: 0.88rem; color: var(--text-muted);">
+                    When Thread 1 saves, the database changes the version from 1 to 2. When Thread 2 tries to save with version 1, EF Core throws a <code>DbUpdateConcurrencyException</code> and rejects the duplicate transaction automatically!
+                </p>
+            </div>
+
+            <!-- Scaling to Cloud -->
+            <div class="glass-panel" id="lvl-100-cloud">
+                <div class="panel-heading"><i class="bi bi-cloud-check-fill text-info"></i> Level 100: The 1,000,000+ User Cloud Architecture</div>
+                <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 16px;">
+                    To scale from a local SQLite starter to a global high-availability banking platform:
+                </p>
+
+                <div class="grid-3">
+                    <div class="glass-panel">
+                        <div class="panel-title" style="color: var(--secondary);">PostgreSQL Cluster</div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">
+                            Primary write node with multi-region read replicas. Read-heavy operations (viewing transaction history) hit replicas, while writes (transfers) hit the primary node.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel">
+                        <div class="panel-title" style="color: var(--accent-emerald);">Redis Distributed Cache</div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">
+                            User session cookies and customer profiles are cached in Redis in-memory with sub-millisecond latency. Reduces database reads by up to 80%.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel">
+                        <div class="panel-title" style="color: var(--lvl-architect);">RabbitMQ / Kafka</div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">
+                            Asynchronous event bus for sending email alerts, fraud detection scoring, and statement PDF generation without blocking the user's transfer request.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating Back to Top Button -->
+    <button class="btn-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to top">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script>
+        // Interactive EMI Calculation Formula (Mirrors LoanService.cs)
+        function calculateEMI() {
+            const P = parseFloat(document.getElementById('calcPrincipal').value) || 0;
+            const annualRate = parseFloat(document.getElementById('calcRate').value) || 0;
+            const n = parseInt(document.getElementById('calcMonths').value) || 1;
+
+            if (P <= 0 || annualRate <= 0 || n <= 0) {
+                document.getElementById('emiDisplay').innerText = "$0.00 / mo";
+                return;
+            }
+
+            const r = annualRate / 12 / 100;
+            const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            document.getElementById('emiDisplay').innerText = "$" + emi.toFixed(2) + " / mo";
+        }
+
+        // Active link highlighting on scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 120;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
