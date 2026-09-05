@@ -1,0 +1,39 @@
+@model BankSystem.Web.Models.Card
+
+@{
+    ViewData["Title"] = "Request a Card";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="glass-card animate-fade-in p-5">
+            <h3 class="mb-4"><i class="bi bi-credit-card text-primary me-2"></i> Request a New Card</h3>
+            
+            <form asp-action="RequestCard">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                
+                <div class="mb-4">
+                    <label asp-for="AccountId" class="form-label">Link to Account</label>
+                    <select asp-for="AccountId" class="form-control glass-input" asp-items="@(new SelectList(ViewBag.Accounts, "Id", "AccountNumber"))">
+                        <option value="">-- Select Account --</option>
+                    </select>
+                    <span asp-validation-for="AccountId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="CardType" class="form-label">Card Type</label>
+                    <select asp-for="CardType" class="form-control glass-input">
+                        <option value="Debit">Debit Card</option>
+                        <option value="Credit">Credit Card</option>
+                    </select>
+                    <span asp-validation-for="CardType" class="text-danger"></span>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-premium btn-lg">Request Card</button>
+                    <a asp-controller="Customer" asp-action="Dashboard" class="btn btn-glass mt-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

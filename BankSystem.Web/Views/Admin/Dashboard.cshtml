@@ -1,0 +1,76 @@
+@model IEnumerable<BankSystem.Web.Models.Customer>
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">System Administration</h2>
+            <p class="text-muted">Global overview of bank operations.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Stats -->
+        <div class="col-md-4 mb-4">
+            <div class="glass-card text-center h-100">
+                <i class="bi bi-people-fill text-primary" style="font-size: 2.5rem;"></i>
+                <h3 class="display-6 fw-bold mt-2">@Model.Count()</h3>
+                <p class="text-muted mb-0">Total Customers</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="glass-card text-center h-100">
+                <i class="bi bi-bank2 text-success" style="font-size: 2.5rem;"></i>
+                <h3 class="display-6 fw-bold mt-2">Active</h3>
+                <p class="text-muted mb-0">System Status</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="glass-card text-center h-100">
+                <i class="bi bi-shield-lock-fill text-warning" style="font-size: 2.5rem;"></i>
+                <h3 class="display-6 fw-bold mt-2">Secure</h3>
+                <p class="text-muted mb-0">Encryption State</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card mt-4">
+        <h4 class="mb-4">Registered Customers</h4>
+        <div class="table-responsive">
+            <table class="table table-glass mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date of Birth</th>
+                        <th>User ID</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.FirstName @item.LastName</td>
+                            <td>@item.DateOfBirth.ToString("MMM dd, yyyy")</td>
+                            <td><span style="font-family: monospace; font-size: 0.9em;">@item.UserId</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-glass"><i class="bi bi-eye"></i> View</button>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">No customers registered yet.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

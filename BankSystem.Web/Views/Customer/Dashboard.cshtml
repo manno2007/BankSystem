@@ -1,0 +1,251 @@
+@model BankSystem.Web.Models.Customer
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row g-4 mb-4">
+    <!-- Balance & Chart Column -->
+    <div class="col-xl-8">
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <p class="text-muted mb-1 fs-6">Total Balance</p>
+                    <h3 class="display-6 fw-bold mb-3">$@(Model.Accounts?.Sum(a => a.Balance).ToString("N2") ?? "0.00")</h3>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-2 py-1"><i class="bi bi-arrow-up"></i> 2.4%</span>
+                        <span class="text-muted ms-2 small">vs last month</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <p class="text-muted mb-1 fs-6">Total Income</p>
+                    <h3 class="display-6 fw-bold mb-3">$14,250.00</h3>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-2 py-1"><i class="bi bi-arrow-up"></i> 5.1%</span>
+                        <span class="text-muted ms-2 small">vs last month</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <p class="text-muted mb-1 fs-6">Total Expenses</p>
+                    <h3 class="display-6 fw-bold mb-3">$8,432.50</h3>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-danger bg-opacity-25 text-danger rounded-pill px-2 py-1"><i class="bi bi-arrow-down"></i> 1.2%</span>
+                        <span class="text-muted ms-2 small">vs last month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Chart -->
+        <div class="glass-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0">Cash Flow</h5>
+                <select class="form-select glass-input form-select-sm w-auto">
+                    <option>Last 7 Days</option>
+                    <option>Last 30 Days</option>
+                    <option>This Year</option>
+                </select>
+            </div>
+            <canvas id="cashFlowChart" height="100"></canvas>
+        </div>
+
+        <!-- Recent Transactions Table -->
+        <div class="glass-card p-0 overflow-hidden">
+            <div class="p-4 border-bottom border-secondary d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Transactions</h5>
+                <a href="#" class="text-primary text-decoration-none small">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-glass mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Transaction</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Account</th>
+                            <th class="text-end pe-4">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Mock Transactions for visual demonstration -->
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3 text-success">
+                                        <i class="bi bi-arrow-down-left"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">Salary Deposit</h6>
+                                        <small class="text-muted">Direct Deposit</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Sep 05, 2026</td>
+                            <td><span class="badge bg-success bg-opacity-25 text-success">Completed</span></td>
+                            <td style="font-family: monospace;">CHK...394</td>
+                            <td class="text-end pe-4 text-success fw-bold">+$4,500.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-danger bg-opacity-10 rounded-circle p-2 me-3 text-danger">
+                                        <i class="bi bi-arrow-up-right"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">Spotify Premium</h6>
+                                        <small class="text-muted">Subscription</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Sep 04, 2026</td>
+                            <td><span class="badge bg-success bg-opacity-25 text-success">Completed</span></td>
+                            <td style="font-family: monospace;">CHK...394</td>
+                            <td class="text-end pe-4 fw-bold">-$12.99</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-10 rounded-circle p-2 me-3 text-warning">
+                                        <i class="bi bi-clock-history"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">Wire Transfer</h6>
+                                        <small class="text-muted">To Jane Doe</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Sep 03, 2026</td>
+                            <td><span class="badge bg-warning bg-opacity-25 text-warning">Pending</span></td>
+                            <td style="font-family: monospace;">CHK...394</td>
+                            <td class="text-end pe-4 fw-bold">-$1,250.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Column -->
+    <div class="col-xl-4">
+        <!-- Cards -->
+        <div class="glass-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0">My Cards</h5>
+                <a asp-controller="Card" asp-action="RequestCard" class="btn btn-sm btn-glass"><i class="bi bi-plus"></i></a>
+            </div>
+            
+            <div class="bank-card">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div class="chip"></div>
+                    <i class="bi bi-wifi text-white fs-4"></i>
+                </div>
+                <div class="bank-card-number">
+                    •••• •••• •••• 4291
+                </div>
+                <div class="d-flex justify-content-between text-white-50">
+                    <div>
+                        <small class="d-block" style="font-size: 0.7rem;">CARDHOLDER</small>
+                        <span>@Model.FirstName.ToUpper() @Model.LastName.ToUpper()</span>
+                    </div>
+                    <div class="text-end">
+                        <small class="d-block" style="font-size: 0.7rem;">EXPIRES</small>
+                        <span>09/30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Transfer -->
+        <div class="glass-card p-4">
+            <h5 class="mb-4">Quick Transfer</h5>
+            <div class="d-flex gap-3 mb-4 overflow-auto pb-2">
+                <div class="text-center" style="min-width: 60px; cursor: pointer;">
+                    <div class="bg-primary bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 50px; height: 50px;">
+                        <i class="bi bi-plus fs-3 text-primary"></i>
+                    </div>
+                    <small class="text-muted">Add</small>
+                </div>
+                <div class="text-center" style="min-width: 60px; cursor: pointer;">
+                    <img src="https://ui-avatars.com/api/?name=Alex+M&background=random" class="rounded-circle mb-2" width="50" height="50">
+                    <small class="text-muted">Alex</small>
+                </div>
+                <div class="text-center" style="min-width: 60px; cursor: pointer;">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+J&background=random" class="rounded-circle mb-2" width="50" height="50">
+                    <small class="text-muted">Sarah</small>
+                </div>
+            </div>
+            <form asp-controller="Transaction" asp-action="Transfer" method="get">
+                <div class="input-group mb-3">
+                    <span class="input-group-text glass-input border-end-0 bg-transparent">$</span>
+                    <input type="number" class="form-control glass-input border-start-0" placeholder="0.00" aria-label="Amount">
+                </div>
+                <button type="submit" class="btn btn-premium w-100">Send Money</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Mock Chart.js Implementation
+        const ctx = document.getElementById('cashFlowChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(79, 70, 229, 0.5)');
+        gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Income',
+                    data: [1200, 1900, 1500, 2200, 1800, 2500, 2100],
+                    borderColor: '#4F46E5',
+                    backgroundColor: gradient,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Expenses',
+                    data: [800, 1200, 900, 1500, 1100, 1800, 1400],
+                    borderColor: '#EF4444',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#94A3B8'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#94A3B8'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,24 @@
+## Build and output directories
+[Bb]in/
+[Oo]bj/
+out/
+
+## Database & temp files
+*.db
+*.db-shm
+*.db-wal
+*.rar
+*.zip
+
+## Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+.gemini/
+
+## OS generated
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/

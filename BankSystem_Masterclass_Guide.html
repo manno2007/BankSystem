@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankSystem Masterclass: File-by-File & Function-by-Function Exhaustive Encyclopedia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --bg-body: #080b11;
+            --bg-sidebar: #0d111a;
+            --bg-card: rgba(18, 23, 37, 0.85);
+            --bg-card-hover: rgba(26, 33, 53, 0.95);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(99, 102, 241, 0.35);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-glow: rgba(99, 102, 241, 0.28);
+            --secondary: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --code-bg: #07090f;
+            --code-border: #1a2030;
+            --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.65;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        aside.sidebar {
+            width: 340px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0; bottom: 0; left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .sidebar-header {
+            padding: 22px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.12) 0%, transparent 100%);
+        }
+
+        .badge-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            color: var(--primary-light);
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-search {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: var(--bg-sidebar);
+            z-index: 10;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 9px 12px 9px 36px;
+            color: #fff;
+            font-size: 0.82rem;
+            outline: none;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .sidebar-menu {
+            padding: 12px 14px 40px;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .menu-category {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 10px 6px;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.83rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .nav-item a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item a.active {
+            color: #fff;
+            background: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .nav-item a i {
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        /* Main Content Container */
+        main.content {
+            margin-left: 340px;
+            flex: 1;
+            padding: 40px 50px 100px;
+            max-width: 1440px;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(16, 185, 129, 0.06) 100%);
+            border: 1px solid var(--border-highlight);
+            border-radius: 20px;
+            padding: 44px;
+            position: relative;
+            margin-bottom: 44px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 14px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 55%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 860px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .quick-nav-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            border-color: var(--secondary);
+            color: #fff;
+            background: rgba(6, 182, 212, 0.12);
+        }
+
+        /* Section Layouts */
+        section {
+            margin-bottom: 60px;
+            scroll-margin-top: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            background: var(--primary-glow);
+            color: var(--primary-light);
+            border: 1px solid var(--border-highlight);
+        }
+
+        .section-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        .section-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* Glass Panels & Cards */
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 22px;
+            transition: border-color 0.2s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--border-highlight);
+        }
+
+        .panel-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        /* File Block Layout */
+        .file-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 36px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .file-card-header {
+            background: #101524;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--code-border);
+        }
+
+        .file-path-title {
+            font-family: var(--font-mono);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-meta-badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pill-badge {
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .pill-csharp { background: rgba(35, 145, 32, 0.2); color: #4ade80; border: 1px solid rgba(35, 145, 32, 0.4); }
+        .pill-razor { background: rgba(104, 33, 122, 0.25); color: #c084fc; border: 1px solid rgba(104, 33, 122, 0.4); }
+        .pill-json { background: rgba(217, 119, 6, 0.2); color: #fbbf24; border: 1px solid rgba(217, 119, 6, 0.4); }
+
+        .file-card-body {
+            padding: 24px;
+        }
+
+        .file-summary-box {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--primary);
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 24px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        /* Function Section Inside File */
+        .func-block {
+            background: rgba(10, 13, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 22px;
+            overflow: hidden;
+        }
+
+        .func-header {
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .func-sig {
+            font-family: var(--font-mono);
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #38bdf8;
+        }
+
+        .func-sig .modifier { color: #f43f5e; }
+        .func-sig .type { color: #818cf8; }
+        .func-sig .name { color: #fbbf24; }
+        .func-sig .param { color: #cbd5e1; }
+
+        .func-badges {
+            display: flex;
+            gap: 6px;
+        }
+
+        .badge-verb {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        .badge-get { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-post { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .badge-auth { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-csrf { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+
+        .func-body {
+            padding: 18px 20px;
+        }
+
+        .func-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        /* Line-by-line Table */
+        .line-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        .line-table th {
+            text-align: left;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-dim);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .line-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            vertical-align: top;
+        }
+
+        .line-num {
+            font-family: var(--font-mono);
+            color: var(--primary-light);
+            font-weight: 600;
+            width: 75px;
+            white-space: nowrap;
+        }
+
+        .code-cell {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 6px;
+            padding: 6px 10px;
+            display: block;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .explain-cell {
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        .explain-cell strong {
+            color: #fff;
+        }
+
+        .tag-concept {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            margin-right: 4px;
+            margin-bottom: 3px;
+        }
+
+        /* Code Container */
+        .code-container {
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 14px 0;
+        }
+
+        pre.code-body {
+            padding: 16px;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        .c-kw { color: #f43f5e; font-weight: 600; }
+        .c-tp { color: #38bdf8; }
+        .c-str { color: #a3e635; }
+        .c-cmt { color: #64748b; font-style: italic; }
+        .c-fn { color: #fbbf24; }
+        .c-num { color: #c084fc; }
+
+        /* Callouts */
+        .callout {
+            border-left: 4px solid var(--primary);
+            background: rgba(99, 102, 241, 0.08);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 18px 0;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .callout-body {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .callout-warn { border-left-color: var(--accent-amber); background: rgba(245, 158, 11, 0.08); }
+        .callout-warn .callout-title { color: var(--accent-amber); }
+
+        .callout-ok { border-left-color: var(--accent-emerald); background: rgba(16, 185, 129, 0.08); }
+        .callout-ok .callout-title { color: var(--accent-emerald); }
+
+        /* Floating Back to top button */
+        .btn-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transition: transform 0.2s, opacity 0.2s;
+            opacity: 0.85;
+            z-index: 999;
+        }
+
+        .btn-top:hover { opacity: 1; transform: translateY(-3px); }
+
+        @media (max-width: 1024px) {
+            aside.sidebar { transform: translateX(-100%); }
+            main.content { margin-left: 0; padding: 20px; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebarNav">
+        <div class="sidebar-header">
+            <div class="badge-brand"><i class="bi bi-award-fill"></i> Senior Developer Edition</div>
+            <div class="sidebar-title"><i class="bi bi-bank2 text-primary"></i> BankSystem Dev</div>
+        </div>
+
+        <div class="sidebar-search">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" id="filterInput" placeholder="Filter files, functions, LINQ...">
+            </div>
+        </div>
+
+        <ul class="sidebar-menu" id="menuList">
+            <li class="menu-category">Executive Architecture</li>
+            <li class="nav-item"><a href="#hero" class="active"><i class="bi bi-rocket-takeoff"></i> Overview &amp; Map</a></li>
+            <li class="nav-item"><a href="#core-concepts"><i class="bi bi-lightbulb"></i> Essential Concepts (C#, DI, LINQ)</a></li>
+
+            <li class="menu-category">Startup &amp; Infrastructure</li>
+            <li class="nav-item"><a href="#file-program-cs"><i class="bi bi-file-code"></i> Program.cs</a></li>
+            <li class="nav-item"><a href="#file-appsettings"><i class="bi bi-gear"></i> appsettings.json</a></li>
+            <li class="nav-item"><a href="#file-csproj"><i class="bi bi-file-earmark-binary"></i> BankSystem.Web.csproj</a></li>
+
+            <li class="menu-category">Data &amp; Persistence</li>
+            <li class="nav-item"><a href="#file-dbcontext-cs"><i class="bi bi-database"></i> ApplicationDbContext.cs</a></li>
+
+            <li class="menu-category">Business Services</li>
+            <li class="nav-item"><a href="#file-tx-service"><i class="bi bi-arrow-left-right"></i> TransactionService.cs</a></li>
+            <li class="nav-item"><a href="#file-loan-service"><i class="bi bi-calculator"></i> LoanService.cs</a></li>
+            <li class="nav-item"><a href="#file-customer-service"><i class="bi bi-person-lines-fill"></i> CustomerService.cs</a></li>
+
+            <li class="menu-category">MVC Controllers</li>
+            <li class="nav-item"><a href="#file-ctrl-tx"><i class="bi bi-controller"></i> TransactionController.cs</a></li>
+            <li class="nav-item"><a href="#file-ctrl-account"><i class="bi bi-shield-lock"></i> AccountController.cs</a></li>
+            <li class="nav-item"><a href="#file-ctrl-customer"><i class="bi bi-person-circle"></i> CustomerController.cs</a></li>
+            <li class="nav-item"><a href="#file-ctrl-loan"><i class="bi bi-cash-stack"></i> LoanController.cs</a></li>
+            <li class="nav-item"><a href="#file-ctrl-card"><i class="bi bi-credit-card"></i> CardController.cs</a></li>
+            <li class="nav-item"><a href="#file-ctrl-report"><i class="bi bi-graph-up"></i> ReportController.cs</a></li>
+            <li class="nav-item"><a href="#file-ctrl-admin"><i class="bi bi-person-badge"></i> AdminController.cs</a></li>
+            <li class="nav-item"><a href="#file-ctrl-home"><i class="bi bi-house"></i> HomeController.cs</a></li>
+
+            <li class="menu-category">Domain Models</li>
+            <li class="nav-item"><a href="#models-group"><i class="bi bi-layers"></i> Account, Customer, Tx, Loan...</a></li>
+
+            <li class="menu-category">ViewModels &amp; DTOs</li>
+            <li class="nav-item"><a href="#viewmodels-group"><i class="bi bi-card-checklist"></i> Transfer, Login, Register...</a></li>
+
+            <li class="menu-category">Razor Views</li>
+            <li class="nav-item"><a href="#views-group"><i class="bi bi-window-sidebar"></i> Dashboard, Layout, Forms...</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+
+        <!-- Hero Section -->
+        <div class="hero" id="hero">
+            <h1>BankSystem Codebase: File-by-File &amp; Function-by-Function Exhaustive Encyclopedia</h1>
+            <p>
+                A microscopic dissection of every class, function, property, and LINQ query in the <strong>BankSystem.Web</strong> application. Master enterprise C# 12, ASP.NET Core 10 MVC, Entity Framework Core, Identity RBAC, and double-entry financial accounting.
+            </p>
+            <div class="quick-nav-chips">
+                <span style="font-size: 0.8rem; color: var(--text-dim); display: flex; align-items: center; margin-right: 4px;">Quick Jump:</span>
+                <a href="#func-transferasync" class="chip"><i class="bi bi-lightning-charge"></i> TransferAsync()</a>
+                <a href="#func-applyloan" class="chip"><i class="bi bi-calculator"></i> ApplyForLoanAsync()</a>
+                <a href="#func-createprofile" class="chip"><i class="bi bi-person-plus"></i> CreateCustomerProfileAsync()</a>
+                <a href="#func-onmodelcreating" class="chip"><i class="bi bi-database-gear"></i> OnModelCreating()</a>
+                <a href="#func-loginpost" class="chip"><i class="bi bi-box-arrow-in-right"></i> Login (POST)</a>
+                <a href="#func-statement" class="chip"><i class="bi bi-file-earmark-spreadsheet"></i> Statement()</a>
+            </div>
+        </div>
+
+        <!-- Section 1: Core Concepts Summary -->
+        <section id="core-concepts">
+            <div class="section-header">
+                <div class="section-icon"><i class="bi bi-lightbulb"></i></div>
+                <div>
+                    <h2>Foundational Concepts You Must Understand</h2>
+                    <div class="section-desc">Key paradigms that underpin the entire BankSystem application.</div>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="glass-panel">
+                    <div class="panel-title"><i class="bi bi-diagram-3 text-primary"></i> MVC Pattern</div>
+                    <p style="font-size: 0.88rem; color: var(--text-muted);">
+                        <strong>Model:</strong> Data &amp; business state.<br>
+                        <strong>View:</strong> Razor HTML rendered to the browser.<br>
+                        <strong>Controller:</strong> Handles HTTP requests, talks to services, and returns a View or Redirect.
+                    </p>
+                </div>
+                <div class="glass-panel">
+                    <div class="panel-title"><i class="bi bi-database-check text-secondary"></i> EF Core &amp; LINQ</div>
+                    <p style="font-size: 0.88rem; color: var(--text-muted);">
+                        <strong>Deferred Execution:</strong> LINQ queries build an Expression Tree. They only hit the database when executed with <code>ToListAsync()</code>, <code>FirstOrDefaultAsync()</code>, etc.
+                    </p>
+                </div>
+                <div class="glass-panel">
+                    <div class="panel-title"><i class="bi bi-shield-check text-accent-emerald"></i> Identity &amp; Auth</div>
+                    <p style="font-size: 0.88rem; color: var(--text-muted);">
+                        <strong>Authentication:</strong> Who are you? (Cookie check).<br>
+                        <strong>Authorization:</strong> What can you do? (<code>[Authorize(Roles="Customer")]</code>).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: Program.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-program-cs">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-play-circle-fill text-primary"></i> BankSystem.Web/Program.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">C# 12 / .NET 10</span>
+                        <span class="pill-badge" style="background: rgba(99,102,241,0.2); color: var(--primary-light);">176 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="file-summary-box">
+                        <strong>Purpose:</strong> The application entry point. Configures the host, registers Dependency Injection services (DbContext, Identity, business services), builds the HTTP request middleware pipeline, and runs asynchronous startup database seeding.
+                    </div>
+
+                    <!-- Block 1: Builder & DB Setup -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">var</span> builder = WebApplication.<span class="name">CreateBuilder</span>(args);</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 8–18</span>
+                        </div>
+                        <div class="func-body">
+                            <div class="func-desc">Initializes the DI container and registers SQLite and Identity security stores.</div>
+                            <table class="line-table">
+                                <thead>
+                                    <tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">10–11</td>
+                                        <td><code class="code-cell">var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Configuration</span><span class="tag-concept">Null-Coalescing</span>
+                                            Reads <code>Data Source=app.db</code> from <code>appsettings.json</code>. If missing, immediately throws an informative exception to fail-fast during boot.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">13–14</td>
+                                        <td><code class="code-cell">builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =>
+    options.UseSqlite(connectionString));</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">EF Core</span><span class="tag-concept">Scoped DI</span>
+                                            Registers <code>ApplicationDbContext</code> in the DI container with a <strong>Scoped</strong> lifetime. Uses SQLite as the underlying database engine.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">16–18</td>
+                                        <td><code class="code-cell">builder.Services.AddIdentity&lt;ApplicationUser, IdentityRole&gt;(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores&lt;ApplicationDbContext&gt;()
+    .AddDefaultTokenProviders();</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">ASP.NET Identity</span>
+                                            Configures the authentication engine for user management (passwords, logins, cookies). Tells Identity to store users in <code>ApplicationDbContext</code> and enables password-reset token providers.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Block 2: DI Services -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">builder.Services</span>.<span class="name">AddScoped</span>&lt;TInterface, TImplementation&gt;();</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 20–24</span>
+                        </div>
+                        <div class="func-body">
+                            <div class="func-desc">Registers custom domain services into the Dependency Injection container.</div>
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">20–22</td>
+                                        <td><code class="code-cell">builder.Services.AddScoped&lt;ITransactionService, TransactionService&gt;();
+builder.Services.AddScoped&lt;ICustomerService, CustomerService&gt;();
+builder.Services.AddScoped&lt;ILoanService, LoanService&gt;();</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Inversion of Control</span><span class="tag-concept">Scoped Lifetime</span>
+                                            Binds each interface to its implementation. By making them <strong>Scoped</strong>, each HTTP request gets one unique instance, sharing the exact same DbContext instance as the controller!
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">24</td>
+                                        <td><code class="code-cell">builder.Services.AddControllersWithViews();</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">MVC Engine</span>
+                                            Enables Controller action dispatching and the Razor view rendering engine.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Block 3: Middleware Pipeline -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">var</span> app = builder.<span class="name">Build</span>(); <span class="c-cmt">// Middleware Pipeline</span></span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 26–43</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">28–32</td>
+                                        <td><code class="code-cell">if (!app.Environment.IsDevelopment()) {
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Error Handling</span><span class="tag-concept">HSTS</span>
+                                            In production, catches unhandled exceptions and redirects to an error page, enforcing HTTP Strict Transport Security (HSTS) headers.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">34–39</td>
+                                        <td><code class="code-cell">app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Security Pipeline Order</span>
+                                            <strong>CRITICAL ORDER:</strong> <code>UseAuthentication()</code> MUST come before <code>UseAuthorization()</code>. First, Identity reads the cookie to establish who the user is. Second, Authorization checks if the user has permission to access the requested route.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">41–43</td>
+                                        <td><code class="code-cell">app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Conventional Routing</span>
+                                            Maps incoming URLs: e.g., <code>/Transaction/Transfer</code> runs <code>TransactionController.Transfer()</code>. If omitted, defaults to <code>HomeController.Index()</code>.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Block 4: Seeding -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">using</span> (<span class="modifier">var</span> scope = app.Services.<span class="name">CreateScope</span>()) <span class="c-cmt">// Database Seeding</span></span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 45–173</span>
+                        </div>
+                        <div class="func-body">
+                            <div class="func-desc">Runs during startup to create test data, roles, and accounts automatically.</div>
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">47–56</td>
+                                        <td><code class="code-cell">var roleManager = scope.ServiceProvider.GetRequiredService&lt;RoleManager&lt;IdentityRole&gt;&gt;();
+var roles = new[] { "Admin", "Customer" };
+foreach (var role in roles) {
+    if (!await roleManager.RoleExistsAsync(role))
+        await roleManager.CreateAsync(new IdentityRole(role));
+}</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Role-Based Access Control</span>
+                                            Ensures that both "Admin" and "Customer" roles exist in the <code>AspNetRoles</code> table.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">58–79</td>
+                                        <td><code class="code-cell">// Seed admin user: admin@bank.com / Admin123!
+// Seed customer user: customer@bank.com / Customer123!</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">UserManager</span><span class="tag-concept">Password Hashing</span>
+                                            Uses <code>userManager.CreateAsync()</code> which automatically salts and hashes the password with PBKDF2 before storing it in SQLite.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">95–130</td>
+                                        <td><code class="code-cell">// Creates Checking ($12,500.50) & Savings ($45,000.00) accounts
+// Adds mock transactions (Salary, Spotify, Grocery)
+// Issues a mock Debit Card (4291...) with CVV 123</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Relational Seeding</span>
+                                            Inserts foreign-key linked data: Customer $\to$ Accounts $\to$ Transactions &amp; Cards, and saves everything with <code>await dbContext.SaveChangesAsync()</code>.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: ApplicationDbContext.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-dbcontext-cs">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-database-fill text-secondary"></i> BankSystem.Web/Data/ApplicationDbContext.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">EF Core 10</span>
+                        <span class="pill-badge" style="background: rgba(6, 182, 212, 0.2); color: var(--secondary);">40 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="file-summary-box">
+                        <strong>Purpose:</strong> The Entity Framework Core Database Context. Bridges C# objects to SQLite relational tables, defines <code>DbSet&lt;T&gt;</code> properties, and configures financial column precision and foreign key cascade rules using the Fluent API.
+                    </div>
+
+                    <!-- Constructor & DbSets -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public class</span> ApplicationDbContext : <span class="type">IdentityDbContext</span>&lt;ApplicationUser&gt;</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 7–21</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">9–12</td>
+                                        <td><code class="code-cell">public ApplicationDbContext(DbContextOptions&lt;ApplicationDbContext&gt; options)
+    : base(options) { }</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Constructor DI</span>
+                                            Passes the options (including the SQLite connection string) to the base <code>IdentityDbContext</code> constructor.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">14–20</td>
+                                        <td><code class="code-cell">public DbSet&lt;Customer&gt; Customers { get; set; }
+public DbSet&lt;Account&gt; Accounts { get; set; }
+public DbSet&lt;Transaction&gt; Transactions { get; set; }
+public DbSet&lt;Loan&gt; Loans { get; set; }
+public DbSet&lt;Card&gt; Cards { get; set; }
+public DbSet&lt;Branch&gt; Branches { get; set; }
+public DbSet&lt;AuditLog&gt; AuditLogs { get; set; }</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">DbSet Table Mapping</span>
+                                            Each <code>DbSet&lt;T&gt;</code> maps directly to a table in SQLite. When you query <code>_context.Transactions</code>, EF Core translates your LINQ query into SQL targeting the <code>Transactions</code> table.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- OnModelCreating -->
+                    <div class="func-block" id="func-onmodelcreating">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">protected override void</span> <span class="name">OnModelCreating</span>(<span class="type">ModelBuilder</span> builder)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 23–37</span>
+                        </div>
+                        <div class="func-body">
+                            <div class="func-desc">Customizes relational table mappings, constraints, and relationships using the Fluent API.</div>
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">24</td>
+                                        <td><code class="code-cell">base.OnModelCreating(builder);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Crucial Call</span>
+                                            Calls the base Identity model configuration. <strong>If omitted</strong>, Identity tables (roles, claims, logins) will fail with foreign key mapping exceptions!
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">26–30</td>
+                                        <td><code class="code-cell">builder.Entity&lt;Account&gt;().Property(a => a.Balance).HasPrecision(18, 2);
+builder.Entity&lt;Transaction&gt;().Property(t => t.Amount).HasPrecision(18, 2);
+builder.Entity&lt;Loan&gt;().Property(l => l.PrincipalAmount).HasPrecision(18, 2);
+builder.Entity&lt;Loan&gt;().Property(l => l.EMI).HasPrecision(18, 2);
+builder.Entity&lt;Loan&gt;().Property(l => l.InterestRate).HasPrecision(5, 2);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Financial Precision</span>
+                                            Prevents floating point rounding errors in monetary figures. <code>HasPrecision(18, 2)</code> forces database column type <code>DECIMAL(18, 2)</code> (up to 16 digits before the decimal and 2 digits for cents).
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">32–36</td>
+                                        <td><code class="code-cell">builder.Entity&lt;Transaction&gt;()
+    .HasOne(t => t.Account)
+    .WithMany(a => a.Transactions)
+    .HasForeignKey(t => t.AccountId)
+    .OnDelete(DeleteBehavior.Cascade);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Foreign Key &amp; Cascade Delete</span>
+                                            Configures 1-to-Many relationship between <code>Account</code> and <code>Transaction</code>. If an account is ever deleted, SQLite will automatically purge all of its linked transaction records to avoid orphan data.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: TransactionService.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-tx-service">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-arrow-left-right text-accent-emerald"></i> BankSystem.Web/Services/TransactionService.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">Business Service</span>
+                        <span class="pill-badge" style="background: rgba(16,185,129,0.2); color: var(--accent-emerald);">98 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="file-summary-box">
+                        <strong>Purpose:</strong> Implements <code>ITransactionService</code>. Handles atomic funds movement between accounts, cash deposits, and withdrawals. Enforces solvency checks and writes tamper-evident <code>AuditLog</code> entries inside an ACID database transaction.
+                    </div>
+
+                    <!-- Function: TransferAsync -->
+                    <div class="func-block" id="func-transferasync">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task&lt;(<span class="type">bool</span> IsSuccess, <span class="type">string</span> ErrorMessage)&gt; <span class="name">TransferAsync</span>(<span class="param">string userId, TransferViewModel model</span>)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 20–55</span>
+                        </div>
+                        <div class="func-body">
+                            <div class="func-desc">Atomically transfers money from the authenticated user's account to a recipient account number.</div>
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">22–23</td>
+                                        <td><code class="code-cell">var customer = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == userId);
+if (customer == null) return (false, "Customer not found.");</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Ownership Verification</span>
+                                            Finds the customer profile corresponding to the logged-in Identity <code>userId</code>. If missing, returns a failure tuple immediately.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">25–28</td>
+                                        <td><code class="code-cell">var fromAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == model.FromAccountId && a.CustomerId == customer.Id);
+var toAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountNumber == model.ToAccountNumber);
+if (fromAccount == null || toAccount == null) return (false, "Invalid account details.");</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Security Guard</span>
+                                            Notice: <code>a.Id == model.FromAccountId &amp;&amp; a.CustomerId == customer.Id</code> ensures that the user cannot transfer money out of someone else's account!
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">29</td>
+                                        <td><code class="code-cell">if (fromAccount.Balance < model.Amount) return (false, "Insufficient funds.");</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Solvency Rule</span>
+                                            Validates that the source account actually has enough balance to cover the transfer amount.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">31–32</td>
+                                        <td><code class="code-cell">using var transaction = await _context.Database.BeginTransactionAsync();
+try {</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">ACID Transaction</span>
+                                            Begins an atomic database transaction. If the server loses power or crashes anywhere before commit, the database rolls back completely, preventing lost money.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">34–35</td>
+                                        <td><code class="code-cell">fromAccount.Balance -= model.Amount;
+toAccount.Balance += model.Amount;</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Change Tracking</span>
+                                            Updates the balance in memory. EF Core's Change Tracker flags both entities as <code>EntityState.Modified</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">37–40</td>
+                                        <td><code class="code-cell">var txOut = new Transaction { AccountId = fromAccount.Id, Amount = model.Amount, Type = "Transfer-Out", Description = $"To {toAccount.AccountNumber}" };
+var txIn = new Transaction { AccountId = toAccount.Id, Amount = model.Amount, Type = "Transfer-In", Description = $"From {fromAccount.AccountNumber}" };
+_context.Transactions.AddRange(txOut, txIn);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Double-Entry Accounting</span>
+                                            Creates two symmetrical transaction records: one debit ("Transfer-Out") on the sender's account, and one credit ("Transfer-In") on the recipient's account.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">42–43</td>
+                                        <td><code class="code-cell">var log = new AuditLog { UserId = userId, Action = "Transfer", Details = $"Transferred {model.Amount} from {fromAccount.AccountNumber} to {toAccount.AccountNumber}" };
+_context.AuditLogs.Add(log);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Regulatory Audit Trail</span>
+                                            Persists an immutable audit log recording who initiated the transfer and when.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">45–48</td>
+                                        <td><code class="code-cell">await _context.SaveChangesAsync();
+await transaction.CommitAsync();
+return (true, null);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Commit</span>
+                                            Executes the generated SQL statements (2 updates, 3 inserts) and commits the transaction to SQLite.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">50–54</td>
+                                        <td><code class="code-cell">catch (Exception) {
+    await transaction.RollbackAsync();
+    return (false, "Transfer failed.");
+}</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Rollback</span>
+                                            Catches any database error or disk failure, undoes all changes, and returns a safe error message.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Function: DepositAsync -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task&lt;(<span class="type">bool</span> IsSuccess, <span class="type">string</span> ErrorMessage)&gt; <span class="name">DepositAsync</span>(<span class="param">string userId, DepositViewModel model</span>)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 57–74</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">62–65</td>
+                                        <td><code class="code-cell">var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == model.AccountId && a.CustomerId == customer.Id);
+if (account == null) return (false, "Invalid account.");
+account.Balance += model.Amount;</code></td>
+                                        <td class="explain-cell">
+                                            Verifies account ownership and increments the balance by the deposited sum.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">66–72</td>
+                                        <td><code class="code-cell">var tx = new Transaction { AccountId = account.Id, Amount = model.Amount, Type = "Deposit", Description = "Cash Deposit" };
+_context.Transactions.Add(tx);
+_context.AuditLogs.Add(...);
+await _context.SaveChangesAsync();</code></td>
+                                        <td class="explain-cell">
+                                            Creates a "Deposit" ledger record and an AuditLog entry, then saves changes to SQLite.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Function: WithdrawAsync -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task&lt;(<span class="type">bool</span> IsSuccess, <span class="type">string</span> ErrorMessage)&gt; <span class="name">WithdrawAsync</span>(<span class="param">string userId, WithdrawViewModel model</span>)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 76–95</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">84</td>
+                                        <td><code class="code-cell">if (account.Balance < model.Amount) return (false, "Insufficient funds.");</code></td>
+                                        <td class="explain-cell">
+                                            Guards against account overdrafts. Rejects the withdrawal if requested amount exceeds balance.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">86–94</td>
+                                        <td><code class="code-cell">account.Balance -= model.Amount;
+var tx = new Transaction { AccountId = account.Id, Amount = model.Amount, Type = "Withdraw", Description = "Cash Withdrawal" };
+_context.Transactions.Add(tx);
+_context.AuditLogs.Add(...);
+await _context.SaveChangesAsync();</code></td>
+                                        <td class="explain-cell">
+                                            Deducts money, writes a "Withdraw" transaction, logs the action, and commits to SQLite.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: LoanService.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-loan-service">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-calculator-fill text-accent-amber"></i> BankSystem.Web/Services/LoanService.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">Business Service</span>
+                        <span class="pill-badge" style="background: rgba(245,158,11,0.2); color: var(--accent-amber);">41 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="file-summary-box">
+                        <strong>Purpose:</strong> Implements <code>ILoanService</code>. Calculates monthly payments using standard mathematical amortization (EMI formula) and creates pending loan applications.
+                    </div>
+
+                    <div class="func-block" id="func-applyloan">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task&lt;<span class="type">bool</span>&gt; <span class="name">ApplyForLoanAsync</span>(<span class="param">string userId, Loan model</span>)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 19–38</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">21–25</td>
+                                        <td><code class="code-cell">var customer = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == userId);
+if (customer == null) return false;
+model.CustomerId = customer.Id;
+model.Status = "Pending";</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Model Binding Sanitization</span>
+                                            Sets <code>CustomerId</code> from the authenticated user and forces the status to "Pending" so the user cannot self-approve their own loan!
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">26–31</td>
+                                        <td><code class="code-cell">var rate = model.InterestRate / 12 / 100;
+if (rate > 0)
+{
+    var emi = (double)model.PrincipalAmount * (double)rate * 
+              Math.Pow(1 + (double)rate, model.DurationMonths) / 
+              (Math.Pow(1 + (double)rate, model.DurationMonths) - 1);
+    model.EMI = (decimal)emi;
+}</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Financial Mathematics</span>
+                                            <strong>Amortization Formula:</strong> $EMI = \frac{P \cdot r \cdot (1+r)^n}{(1+r)^n - 1}$<br>
+                                            Computes the exact monthly installment based on principal, annual interest rate divided by 12 months, and total tenure in months.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">33–37</td>
+                                        <td><code class="code-cell">_context.Loans.Add(model);
+_context.AuditLogs.Add(new AuditLog { UserId = userId, Action = "Loan Application", Details = $"Applied for loan of {model.PrincipalAmount}" });
+await _context.SaveChangesAsync();
+return true;</code></td>
+                                        <td class="explain-cell">
+                                            Saves the loan application entity and an audit entry to the database.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: CustomerService.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-customer-service">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-person-lines-fill text-primary"></i> BankSystem.Web/Services/CustomerService.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">Business Service</span>
+                        <span class="pill-badge" style="background: rgba(99,102,241,0.2); color: var(--primary-light);">56 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="file-summary-box">
+                        <strong>Purpose:</strong> Implements <code>ICustomerService</code>. Queries customer profiles with eager loading, retrieves accounts, and handles profile initialization with automatic checking account generation.
+                    </div>
+
+                    <!-- Function: GetCustomerByUserIdAsync -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task&lt;<span class="type">Customer</span>&gt; <span class="name">GetCustomerByUserIdAsync</span>(<span class="param">string userId</span>)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 21–26</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">23–25</td>
+                                        <td><code class="code-cell">return await _context.Customers
+    .Include(c => c.Accounts)
+    .FirstOrDefaultAsync(c => c.UserId == userId);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Eager Loading (.Include)</span>
+                                            Performs a SQL <code>LEFT JOIN</code> to load the customer's related bank accounts simultaneously. Without <code>.Include</code>, <code>customer.Accounts</code> would be empty!
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Function: GetCustomerAccountsAsync -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task&lt;<span class="type">List</span>&lt;Account&gt;&gt; <span class="name">GetCustomerAccountsAsync</span>(<span class="param">string userId</span>)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 28–32</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">30–31</td>
+                                        <td><code class="code-cell">var customer = await GetCustomerByUserIdAsync(userId);
+return customer?.Accounts?.ToList() ?? new List&lt;Account&gt;();</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Safe Navigation &amp; Null Coalescing</span>
+                                            Uses <code>?.</code> and <code>??</code>. If the customer or accounts collection is null, returns a safe empty list instead of throwing an error.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Function: CreateCustomerProfileAsync -->
+                    <div class="func-block" id="func-createprofile">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task <span class="name">CreateCustomerProfileAsync</span>(<span class="param">string userId, string userFirstName, string userLastName, Customer model</span>)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 34–53</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">36–41</td>
+                                        <td><code class="code-cell">model.UserId = userId;
+if (string.IsNullOrEmpty(model.FirstName)) model.FirstName = userFirstName;
+if (string.IsNullOrEmpty(model.LastName)) model.LastName = userLastName;
+_context.Customers.Add(model);
+await _context.SaveChangesAsync();</code></td>
+                                        <td class="explain-cell">
+                                            Populates profile names, links the Identity user ID, and saves to the database to generate the new customer primary key (<code>model.Id</code>).
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">44–52</td>
+                                        <td><code class="code-cell">var account = new Account {
+    AccountNumber = "CHK" + new Random().Next(1000000, 9999999).ToString(),
+    Balance = 0,
+    AccountType = "Checking",
+    CustomerId = model.Id
+};
+_context.Accounts.Add(account);
+await _context.SaveChangesAsync();</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Domain Workflow</span>
+                                            Automatically creates a default Checking Account with $0 balance for every newly enrolled customer.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: TransactionController.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-ctrl-tx">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-controller text-primary"></i> BankSystem.Web/Controllers/TransactionController.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">MVC Controller</span>
+                        <span class="pill-badge" style="background: rgba(99,102,241,0.2); color: var(--primary-light);">116 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="file-summary-box">
+                        <strong>Security:</strong> Decorated with <code>[Authorize(Roles = "Customer")]</code>. Every action in this controller requires the caller to be an authenticated user in the "Customer" role.
+                    </div>
+
+                    <!-- Transfer Action -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="name">Transfer</span>() [HttpGet] &amp; [HttpPost]</span>
+                            <div class="func-badges">
+                                <span class="badge-verb badge-get">GET</span>
+                                <span class="badge-verb badge-post">POST</span>
+                                <span class="badge-verb badge-auth">AUTH</span>
+                                <span class="badge-verb badge-csrf">CSRF</span>
+                            </div>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">28–34</td>
+                                        <td><code class="code-cell">[HttpGet]
+public async Task&lt;IActionResult&gt; Transfer() {
+    var userId = _userManager.GetUserId(User);
+    ViewBag.Accounts = await _customerService.GetCustomerAccountsAsync(userId);
+    return View(new TransferViewModel());
+}</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">ViewBag Data Passing</span>
+                                            Reads the logged-in user's claims from <code>User</code>, loads the list of accounts into <code>ViewBag.Accounts</code> to populate a dropdown select box in Razor, and renders the form.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">36–55</td>
+                                        <td><code class="code-cell">[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task&lt;IActionResult&gt; Transfer(TransferViewModel model) {
+    var userId = _userManager.GetUserId(User);
+    ViewBag.Accounts = await _customerService.GetCustomerAccountsAsync(userId);
+
+    if (!ModelState.IsValid) return View(model);
+
+    var (isSuccess, errorMessage) = await _transactionService.TransferAsync(userId, model);
+    if (!isSuccess) {
+        ModelState.AddModelError(string.Empty, errorMessage);
+        return View(model);
+    }
+
+    TempData["Message"] = "Transfer successful.";
+    return RedirectToAction("Dashboard", "Customer");
+}</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">CSRF Protection</span><span class="tag-concept">PRG Pattern</span>
+                                            1. <code>[ValidateAntiForgeryToken]</code> blocks cross-site attacks.<br>
+                                            2. <code>ModelState.IsValid</code> verifies data annotations (amount > 0, required fields).<br>
+                                            3. Calls <code>_transactionService.TransferAsync()</code>.<br>
+                                            4. If failed, adds a model error rendered in red.<br>
+                                            5. If successful, uses <code>TempData["Message"]</code> and redirects to Dashboard (PRG pattern).
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Deposit & Withdraw Actions -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="name">Deposit</span>() &amp; <span class="name">Withdraw</span>()</span>
+                            <div class="func-badges">
+                                <span class="badge-verb badge-get">GET</span>
+                                <span class="badge-verb badge-post">POST</span>
+                            </div>
+                        </div>
+                        <div class="func-body">
+                            <p style="font-size: 0.88rem; color: var(--text-muted);">
+                                Symmetrical to <code>Transfer</code>: accepts <code>DepositViewModel</code> and <code>WithdrawViewModel</code>, checks <code>ModelState.IsValid</code>, invokes <code>TransactionService</code>, and redirects to Dashboard with confirmation messages.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: AccountController.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-ctrl-account">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-shield-lock-fill text-accent-rose"></i> BankSystem.Web/Controllers/AccountController.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">Auth Controller</span>
+                        <span class="pill-badge" style="background: rgba(244,63,94,0.2); color: var(--accent-rose);">72 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="file-summary-box">
+                        <strong>Purpose:</strong> Manages authentication lifecycle: Registering new user credentials, Logging in with secure HTTP-only cookies, and Logging out.
+                    </div>
+
+                    <!-- Register Action -->
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="name">Register</span>(<span class="param">RegisterViewModel model</span>) [HttpPost]</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 23–43</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">29–30</td>
+                                        <td><code class="code-cell">var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
+var result = await _userManager.CreateAsync(user, model.Password);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Secure Creation</span>
+                                            Creates the Identity user and hashes the password according to configured password policies (letters, numbers, special characters).
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="line-num">34–36</td>
+                                        <td><code class="code-cell">await _userManager.AddToRoleAsync(user, "Customer");
+await _signInManager.SignInAsync(user, isPersistent: false);
+return RedirectToAction("Index", "Home");</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Role Assignment &amp; Sign-In</span>
+                                            Assigns the default "Customer" role to the user and issues an encrypted authentication session cookie.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Login Action -->
+                    <div class="func-block" id="func-loginpost">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="name">Login</span>(<span class="param">LoginViewModel model</span>) [HttpPost]</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 48–61</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">54–56</td>
+                                        <td><code class="code-cell">var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+if (result.Succeeded)
+    return RedirectToAction("Index", "Home");</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Password Verification</span>
+                                            Verifies the password against the stored PBKDF2 hash. If valid, writes the auth cookie to response headers.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: CustomerController.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-ctrl-customer">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-person-badge text-primary"></i> BankSystem.Web/Controllers/CustomerController.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">MVC Controller</span>
+                        <span class="pill-badge" style="background: rgba(99,102,241,0.2); color: var(--primary-light);">58 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="file-summary-box">
+                        <strong>Purpose:</strong> Displays the customer banking dashboard, balance cards, cards, and recent transactions. If no profile exists for a new user, redirects to profile onboarding.
+                    </div>
+
+                    <div class="func-block">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task&lt;IActionResult&gt; <span class="name">Dashboard</span>()</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 22–33</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">24–30</td>
+                                        <td><code class="code-cell">var userId = _userManager.GetUserId(User);
+var customer = await _customerService.GetCustomerByUserIdAsync(userId);
+if (customer == null) {
+    return RedirectToAction(nameof(CreateProfile));
+}
+return View(customer);</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">Onboarding Guard</span>
+                                            Extracts the user ID from the authentication cookie. If the customer hasn't filled out their profile details, redirects them to <code>CreateProfile</code>. Otherwise, renders <code>Dashboard.cshtml</code> with the Customer model.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: ReportController.cs -->
+        <!-- ========================================================================= -->
+        <section id="file-ctrl-report">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-file-earmark-spreadsheet text-secondary"></i> BankSystem.Web/Controllers/ReportController.cs</div>
+                    <div class="file-meta-badges">
+                        <span class="pill-badge pill-csharp">Reporting</span>
+                        <span class="pill-badge" style="background: rgba(6,182,212,0.2); color: var(--secondary);">34 Lines</span>
+                    </div>
+                </div>
+                <div class="file-card-body">
+                    <div class="func-block" id="func-statement">
+                        <div class="func-header">
+                            <span class="func-sig"><span class="modifier">public async</span> Task&lt;IActionResult&gt; <span class="name">Statement</span>(<span class="param">int accountId</span>)</span>
+                            <span class="pill-badge" style="background: rgba(255,255,255,0.06); color: #fff;">Lines 22–32</span>
+                        </div>
+                        <div class="func-body">
+                            <table class="line-table">
+                                <thead><tr><th>Lines</th><th>Exact Code</th><th>Deep Line-by-Line Explanation</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="line-num">24–28</td>
+                                        <td><code class="code-cell">var model = new StatementViewModel { AccountId = accountId };
+model.Transactions = await _context.Transactions
+    .Where(t => t.AccountId == accountId && t.TransactionDate >= model.StartDate && t.TransactionDate <= model.EndDate)
+    .OrderByDescending(t => t.TransactionDate)
+    .ToListAsync();</code></td>
+                                        <td class="explain-cell">
+                                            <span class="tag-concept">LINQ Filtering &amp; Ordering</span>
+                                            Executes an optimized SQL query with <code>WHERE</code> and <code>ORDER BY ... DESC</code>. Returns the newest transactions first.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- FILE: Remaining Controllers (Loan, Card, Admin, Home) -->
+        <!-- ========================================================================= -->
+        <section id="remaining-ctrls">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-boxes text-accent-amber"></i> Additional Controllers: Loan, Card, Admin &amp; Home</div>
+                </div>
+                <div class="file-card-body">
+                    <div class="grid-2">
+                        <div class="glass-panel" id="file-ctrl-loan">
+                            <div class="panel-title"><i class="bi bi-cash text-accent-emerald"></i> LoanController.cs</div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+                                <code>[Authorize(Roles = "Customer")] Apply(Loan model)</code>: Validates form input, invokes <code>_loanService.ApplyForLoanAsync()</code>, computes EMI, and redirects to Dashboard.
+                            </p>
+                        </div>
+
+                        <div class="glass-panel" id="file-ctrl-card">
+                            <div class="panel-title"><i class="bi bi-credit-card-2-front text-secondary"></i> CardController.cs</div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+                                <code>RequestCard()</code>: Generates a randomized 16-digit card number, 3-digit CVV, and 4-year expiration date, binding the card to the user's selected account.
+                            </p>
+                        </div>
+
+                        <div class="glass-panel" id="file-ctrl-admin">
+                            <div class="panel-title"><i class="bi bi-person-gear text-accent-rose"></i> AdminController.cs</div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+                                <code>[Authorize(Roles = "Admin")] Dashboard()</code>: Restricted to bank staff/administrators. Loads and displays all system customers and total bank deposits.
+                            </p>
+                        </div>
+
+                        <div class="glass-panel" id="file-ctrl-home">
+                            <div class="panel-title"><i class="bi bi-house-door text-primary"></i> HomeController.cs</div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+                                <code>Index()</code>: Public landing page showcasing banking features, rates, and sign-up call-to-actions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- MODELS & VIEWMODELS -->
+        <!-- ========================================================================= -->
+        <section id="models-group">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-layers-fill text-secondary"></i> Domain Models &amp; ViewModels (Data Architecture)</div>
+                </div>
+                <div class="file-card-body">
+                    <div class="grid-2">
+                        <div class="glass-panel">
+                            <div class="panel-title">Account.cs</div>
+                            <ul style="list-style: none; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
+                                <li><code>int Id</code>: Primary Key</li>
+                                <li><code>string AccountNumber</code>: e.g. "CHK4921942"</li>
+                                <li><code>decimal Balance</code>: Current funds (18, 2)</li>
+                                <li><code>string AccountType</code>: "Checking" or "Savings"</li>
+                                <li><code>int CustomerId</code>: Foreign Key to Customer</li>
+                                <li><code>ICollection&lt;Transaction&gt; Transactions</code>: Ledger items</li>
+                                <li><code>ICollection&lt;Card&gt; Cards</code>: Attached debit cards</li>
+                            </ul>
+                        </div>
+
+                        <div class="glass-panel">
+                            <div class="panel-title">Customer.cs</div>
+                            <ul style="list-style: none; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
+                                <li><code>int Id</code>: Primary Key</li>
+                                <li><code>string UserId</code>: Foreign Key to Identity User</li>
+                                <li><code>string FirstName, LastName</code>: Profile names</li>
+                                <li><code>DateTime DateOfBirth</code>: KYC age verification</li>
+                                <li><code>string? Address</code>: Residential address</li>
+                                <li><code>ICollection&lt;Account&gt; Accounts</code>: Owned accounts</li>
+                                <li><code>ICollection&lt;Loan&gt; Loans</code>: Applied loans</li>
+                            </ul>
+                        </div>
+
+                        <div class="glass-panel" id="viewmodels-group">
+                            <div class="panel-title">TransferViewModel.cs</div>
+                            <ul style="list-style: none; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
+                                <li><code>[Required] int FromAccountId</code></li>
+                                <li><code>[Required] string ToAccountNumber</code></li>
+                                <li><code>[Required] [Range(0.01, double.MaxValue)] decimal Amount</code></li>
+                                <li><code>string? Description</code></li>
+                            </ul>
+                        </div>
+
+                        <div class="glass-panel">
+                            <div class="panel-title">RegisterViewModel.cs</div>
+                            <ul style="list-style: none; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
+                                <li><code>[Required] [EmailAddress] string Email</code></li>
+                                <li><code>[Required] [DataType(Password)] string Password</code></li>
+                                <li><code>[Compare("Password")] string ConfirmPassword</code></li>
+                                <li><code>[Required] DateTime DateOfBirth</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- VIEWS -->
+        <!-- ========================================================================= -->
+        <section id="views-group">
+            <div class="file-card">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-window-sidebar text-primary"></i> Razor Views &amp; Frontend Mechanics</div>
+                </div>
+                <div class="file-card-body">
+                    <div class="glass-panel">
+                        <div class="panel-title">How Views Work in this Project</div>
+                        <ul style="font-size: 0.9rem; color: var(--text-muted); margin-left: 20px; display: flex; flex-direction: column; gap: 10px;">
+                            <li>
+                                <strong>_ViewImports.cshtml:</strong> Universally registers <code>@using BankSystem.Web</code>, <code>@using BankSystem.Web.Models</code>, and <code>@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers</code> so every single view can use tag helpers without manual imports!
+                            </li>
+                            <li>
+                                <strong>_ViewStart.cshtml:</strong> Specifies <code>Layout = "_Layout";</code> so that all pages automatically inherit the common master layout (sidebar, navbar, stylesheets).
+                            </li>
+                            <li>
+                                <strong>_Layout.cshtml:</strong> Contains the dark glassmorphic UI shell, navigation drawer, login/logout header buttons, and scripts (Bootstrap 5 &amp; Chart.js).
+                            </li>
+                            <li>
+                                <strong>Views/Customer/Dashboard.cshtml:</strong> The main financial cockpit. Uses Razor to calculate totals with LINQ: <code>Model.Accounts?.Sum(a => a.Balance)</code>, renders active cards, and initializes a Chart.js cash flow graph.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuration Files -->
+        <section id="file-appsettings">
+            <div class="file-card" id="file-csproj">
+                <div class="file-card-header">
+                    <div class="file-path-title"><i class="bi bi-filetype-json text-accent-amber"></i> Configuration: appsettings.json &amp; BankSystem.Web.csproj</div>
+                </div>
+                <div class="file-card-body">
+                    <div class="grid-2">
+                        <div class="code-container">
+                            <div class="code-header"><span class="file-name">appsettings.json</span></div>
+                            <pre class="code-body">{
+  <span class="c-kw">"ConnectionStrings"</span>: {
+    <span class="c-str">"DefaultConnection"</span>: <span class="c-str">"Data Source=app.db"</span>
+  },
+  <span class="c-kw">"Logging"</span>: {
+    <span class="c-kw">"LogLevel"</span>: {
+      <span class="c-str">"Default"</span>: <span class="c-str">"Information"</span>,
+      <span class="c-str">"Microsoft.AspNetCore"</span>: <span class="c-str">"Warning"</span>
+    }
+  },
+  <span class="c-kw">"AllowedHosts"</span>: <span class="c-str">"*"</span>
+}</pre>
+                        </div>
+
+                        <div class="code-container">
+                            <div class="code-header"><span class="file-name">BankSystem.Web.csproj</span></div>
+                            <pre class="code-body">&lt;Project Sdk=<span class="c-str">"Microsoft.NET.Sdk.Web"</span>&gt;
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+  &lt;/PropertyGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include=<span class="c-str">"Microsoft.AspNetCore.Identity.EntityFrameworkCore"</span> Version=<span class="c-str">"10.0.0"</span> /&gt;
+    &lt;PackageReference Include=<span class="c-str">"Microsoft.EntityFrameworkCore.Sqlite"</span> Version=<span class="c-str">"10.0.0"</span> /&gt;
+    &lt;PackageReference Include=<span class="c-str">"Microsoft.EntityFrameworkCore.Tools"</span> Version=<span class="c-str">"10.0.0"</span> /&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Project&gt;</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating Back to Top Button -->
+    <button class="btn-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to top">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script>
+        // Live search and filter across files and functions
+        const filterInput = document.getElementById('filterInput');
+        filterInput.addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase().trim();
+            const fileCards = document.querySelectorAll('.file-card');
+
+            fileCards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Highlight active link on scroll
+        const sections = document.querySelectorAll('section, div.hero');
+        const navLinks = document.querySelectorAll('.sidebar-menu .nav-item a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const top = section.offsetTop - 120;
+                if (window.scrollY >= top) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Nexus Bank</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Chart.js for Dashboard Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="app-wrapper">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <a class="sidebar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-hexagon-fill text-primary me-2"></i> Nexus
+                </a>
+                
+                <ul class="sidebar-nav">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Admin" asp-action="Dashboard"><i class="bi bi-shield-lock"></i> Admin Portal</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Customer" asp-action="Dashboard"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Transaction" asp-action="Transfer"><i class="bi bi-send"></i> Send Money</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Transaction" asp-action="Deposit"><i class="bi bi-arrow-down-circle"></i> Deposit</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Transaction" asp-action="Withdraw"><i class="bi bi-arrow-up-circle"></i> Withdraw</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Loan" asp-action="Apply"><i class="bi bi-cash-stack"></i> Loans</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Card" asp-action="RequestCard"><i class="bi bi-credit-card"></i> Cards</a>
+                        </li>
+                    }
+                </ul>
+
+                <div class="mt-auto">
+                    <form asp-controller="Account" asp-action="Logout" method="post">
+                        <button type="submit" class="nav-link w-100 text-start bg-transparent border-0"><i class="bi bi-box-arrow-right"></i> Sign Out</button>
+                    </form>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="main-wrapper">
+                <header class="top-header">
+                    <h3 class="mb-0">@ViewData["Title"]</h3>
+                    <div class="d-flex align-items-center">
+                        <div class="glass-search d-flex align-items-center me-4" style="width: 250px;">
+                            <i class="bi bi-search text-muted ms-3"></i>
+                            <input type="text" class="form-control border-0 bg-transparent text-white shadow-none" placeholder="Search...">
+                        </div>
+                        <a href="#" class="text-white me-3 position-relative">
+                            <i class="bi bi-bell fs-5"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                <span class="visually-hidden">New alerts</span>
+                            </span>
+                        </a>
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://ui-avatars.com/api/?name=@User.Identity.Name&background=4F46E5&color=fff" alt="" width="32" height="32" class="rounded-circle me-2">
+                                <strong>@User.Identity.Name</strong>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-controller="Account" asp-action="Logout" method="post">
+                                        <button type="submit" class="dropdown-item">Sign out</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="main-content">
+                    <div class="animate-fade-in">
+                        @if (TempData["Message"] != null)
+                        {
+                            <div class="alert alert-success glass-card mb-4 border-success p-3">
+                                <i class="bi bi-check-circle-fill me-2 text-success"></i> @TempData["Message"]
+                            </div>
+                        }
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger glass-card mb-4 border-danger p-3">
+                                <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i> @TempData["Error"]
+                            </div>
+                        }
+                        @RenderBody()
+                    </div>
+                </main>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Landing Page Layout for unauthenticated users -->
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-dark mb-4 py-3" style="background: transparent;">
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-hexagon-fill text-primary me-2"></i> Nexus
+                    </a>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                        <ul class="navbar-nav">
+                            <li class="nav-item me-2">
+                                <a class="btn btn-glass" asp-controller="Account" asp-action="Login">Sign In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-premium" asp-controller="Account" asp-action="Register">Create Account</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

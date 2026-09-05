@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center animate-fade-in" style="margin-top: 10vh;">
+    <h1 class="display-3 fw-bold mb-4">Banking, <span style="background: linear-gradient(135deg, #4F46E5 0%, #a5b4fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Redefined.</span></h1>
+    <p class="lead text-muted mb-5 mx-auto" style="max-width: 600px;">
+        Experience the future of personal finance with Nexus Bank. Secure, lightning-fast, and designed for your digital life.
+    </p>
+
+    <div class="d-flex justify-content-center gap-4 mb-5">
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-premium btn-lg px-5 py-3 fs-5">Get Started</a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-glass btn-lg px-5 py-3 fs-5">Sign In</a>
+        }
+        else
+        {
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-premium btn-lg px-5 py-3 fs-5">Admin Portal</a>
+            }
+            else
+            {
+                <a asp-controller="Customer" asp-action="Dashboard" class="btn btn-premium btn-lg px-5 py-3 fs-5">Go to Dashboard</a>
+            }
+        }
+    </div>
+
+    <div class="row mt-5 pt-5">
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4 text-start">
+                <i class="bi bi-shield-check text-primary mb-3 d-block" style="font-size: 2.5rem;"></i>
+                <h3 class="h4">Bank-grade Security</h3>
+                <p class="text-muted">Your funds and data are protected by industry-leading encryption and real-time fraud monitoring.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4 text-start">
+                <i class="bi bi-lightning-charge text-warning mb-3 d-block" style="font-size: 2.5rem;"></i>
+                <h3 class="h4">Instant Transfers</h3>
+                <p class="text-muted">Move your money at the speed of light. Real-time settlements across all your accounts globally.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4 text-start">
+                <i class="bi bi-pie-chart text-success mb-3 d-block" style="font-size: 2.5rem;"></i>
+                <h3 class="h4">Smart Insights</h3>
+                <p class="text-muted">Understand your spending habits with AI-driven analytics and visual dashboards.</p>
+            </div>
+        </div>
+    </div>
+</div>
